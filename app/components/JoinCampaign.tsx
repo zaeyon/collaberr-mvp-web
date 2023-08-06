@@ -7,11 +7,13 @@ import { getDday } from "../lib/date";
 import Button from "./Button";
 
 interface props {
-  campaignItem: campaignType;
+  loading: boolean;
+  campaignItem: any;
   clickJoinCampaign: () => void;
 }
 
 export default function JoinCampaign({
+  loading,
   campaignItem,
   clickJoinCampaign,
 }: props) {
@@ -23,25 +25,26 @@ export default function JoinCampaign({
         <div style={{ marginTop: 24 }} className={styles.subItem}>
           <div className={styles.subLabel}>광고비</div>
           <div className={styles.subValue}>
-            {"$" + campaignItem.reward?.toLocaleString()}
+            {!loading ? "$" + campaignItem.reward?.toLocaleString() : " "}
           </div>
         </div>
         <div className={styles.subItem}>
           <div className={styles.subLabel}>모집 마감일</div>
           <div className={styles.subValue}>
-            {campaignItem.recruit_end_date}
-
-            <span className={styles.addInfo}>
-              {new Date() > new Date(campaignItem.recruit_end_date)
-                ? "모집 마감"
-                : `D-${getDday(campaignItem.recruit_end_date)}`}
-            </span>
+            {!loading ? campaignItem.recruit_end_date : ""}
+            {!loading && (
+              <span className={styles.addInfo}>
+                {new Date() > new Date(campaignItem.recruit_end_date)
+                  ? "모집 마감"
+                  : `D-${getDday(campaignItem.recruit_end_date)}`}
+              </span>
+            )}
           </div>
         </div>
         <div className={styles.subItem}>
           <div className={styles.subLabel}>모집현황</div>
           <div className={styles.subValue}>
-            {"-"}
+            {!loading ? campaignItem.approved_creators.length + "명" : ""}
             <span className={styles.addInfo}>{""}</span>
           </div>
         </div>

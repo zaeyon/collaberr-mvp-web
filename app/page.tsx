@@ -10,6 +10,7 @@ import { allCreatorsState } from "./recoil/creator";
 import CampaignCarousel from "./components/CampaignCarousel";
 import Button from "./components/Button";
 import CreatorRanking from "./components/CreatorRanking";
+import CreatorDetail from "./components/Creators/CreatorDetail";
 import { GET_showAllCampaigns } from "./api/campaign";
 import { GET_showAllCreators } from "./api/creator";
 
@@ -18,6 +19,8 @@ import icon_chevron_right from "@/app/assets/icons/icon_chevron-right.png";
 export default function Home() {
   const [allCampaigns, setAllCampaigns] = useRecoilState(allCampaignsState);
   const [allCreators, setAllCreators] = useRecoilState(allCreatorsState);
+  const [creatorRankingData, setCreatorRankingData] = useState([]);
+  const [isVisCreatorDetail, setIsVisCreatorDetail] = useState(false);
   const [loading, setLoading] = useState(
     allCampaigns.length > 0 ? false : true
   );
@@ -25,13 +28,28 @@ export default function Home() {
     value: "all",
     kr: "전체",
   });
+  const [channelId, setChannelId] = useState("");
 
   const router = useRouter();
 
-  const selectCategory = (
-    category: SetStateAction<{ value: string; kr: string }>
-  ) => {
+  const selectCategory = (category: any) => {
     setCurCategory(category);
+
+    if (category.value === "all") setCreatorRankingData(allCreators);
+    else {
+      const selectedCategoryRaking = allCreators.filter(
+        (creator: any) => creator.channel_type === category.kr
+      );
+
+      setCreatorRankingData(selectedCategoryRaking);
+    }
+  };
+  const openCreatorDetail = (channelId: string) => {
+    setIsVisCreatorDetail(true);
+    setChannelId(channelId);
+  };
+  const clickModalOutside = () => {
+    setIsVisCreatorDetail(false);
   };
 
   useEffect(() => {
@@ -52,6 +70,7 @@ export default function Home() {
       .then((res) => {
         console.log("GET_showAllCreators success", res);
         setAllCreators(res);
+        setCreatorRankingData(res);
       })
       .catch((err) => {
         console.log("GET_showAllCreators fail err", err);
@@ -101,15 +120,22 @@ export default function Home() {
       </div> */}
       <h3 className={styles.title}>크리에이터 랭킹</h3>
       <p className={styles.description}>
-        크리에이터 랭킹은 ~기준으로 산정됩니다
+        지금 사용자들에게 가장 인기있는 크리에이터
       </p>
       <div className={styles.creatorRanking}>
         <CreatorRanking
+          openCreatorDetail={openCreatorDetail}
           selectCategory={selectCategory}
           curCategory={curCategory}
-          creatorRankingData={allCreators}
+          creatorRankingData={creatorRankingData}
         />
-      </div>
+      </div>{" "}
+      {isVisCreatorDetail && (
+        <CreatorDetail
+          channelId={channelId}
+          clickModalOutside={clickModalOutside}
+        />
+      )}
     </main>
   );
 }

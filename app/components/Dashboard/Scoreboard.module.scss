@@ -6,9 +6,11 @@
 }
 
 .scoreboardItem {
+    min-height: 115px;
     padding: 16px 30px;
     display: flex; 
     flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
     flex: 1 0 0;
     gap: 8px;

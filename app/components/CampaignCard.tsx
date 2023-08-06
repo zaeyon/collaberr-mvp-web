@@ -63,19 +63,21 @@ export default function CampaignCard({ type, campaign }: props) {
               src={platformIcon[campaign.platform]}
               className={styles.platformIcon}
             />
-            <Image
+            {/* <Image
               width={24}
               height={24}
               alt={"icon_bookmark"}
               src={icon_bookmark_fill}
               className={styles.bookmarkIcon}
-            />
+            /> */}
           </motion.div>
-          <div className={styles.brandName}>{campaign.brand_name}</div>
+          <div
+            className={styles.brandName}
+          >{`${campaign.brand_name} • ${campaign.category}`}</div>
           <motion.div variants={titleAni} className={styles.title}>
             {campaign.title}
           </motion.div>
-          <div className={styles.viewCount}>{"조회수: 2,233"}</div>
+          {/* <div className={styles.viewCount}>{campaign.category}</div> */}
         </Link>
       </motion.div>
     </MotionConfig>

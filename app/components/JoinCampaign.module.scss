@@ -9,12 +9,14 @@
 }
 
 .summaryInfoContainer {
+    height: 283px;
     padding: 20px 16px;
     border-radius: 16px;
     border: 1px solid #E6EAEF;
     display: flex;
     flex-direction: column;
     background-color: white;
+    
 }
 
 .title {
@@ -51,6 +53,7 @@
 } 
 
 .subItem > .subValue {
+    height: 24px;
     margin-top: 4px;
     color: #35424C;
     font-weight: 500;

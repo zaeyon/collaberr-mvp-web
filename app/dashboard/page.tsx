@@ -7,6 +7,7 @@ import { myCampaignsState, campaignStatusTableState } from "../recoil/campaign";
 import { GET_showMyCampaigns } from "../api/campaign";
 import Scoreboard from "../components/Dashboard/Scoreboard";
 import ListTable from "../components/ListTable";
+import GraphTab from "../components/Dashboard/GraphTab";
 
 const Container = styled.div`
   padding: 40px 0px;
@@ -18,6 +19,28 @@ export default function Dashboard() {
   const totalInvestmentCost = useRef<number>();
   const totalViews = useRef<number>();
   const totalParticipation = useRef<number>();
+  const [rewardGraphCurTab, setRewardGraphCurTab] = useState(
+    REWARD_GRAPH_DATA[0].label
+  );
+  const [rewardGraphData, setRewardGraphData] = useState<any>(
+    REWARD_GRAPH_DATA[0].data
+  );
+
+  const [actionGraphCurTab, setActionGraphCurTab] = useState(
+    ACTION_GRAPH_DATA[0].label
+  );
+  const [actionGraphData, setActionGraphData] = useState<any>(
+    ACTION_GRAPH_DATA[0].data
+  );
+
+  const changeRewardGraphTab = (tab: string, data: number[]) => {
+    setRewardGraphCurTab(tab);
+    setRewardGraphData(data);
+  };
+  const changeActionGraphTab = (tab: string, data: number[]) => {
+    setActionGraphCurTab(tab);
+    setActionGraphData(data);
+  };
 
   useEffect(() => {
     GET_showMyCampaigns()
@@ -49,96 +72,240 @@ export default function Dashboard() {
     },
     {
       label: "전체 투자 비용",
-      value: totalInvestmentCost.current
-        ? `$${totalInvestmentCost.current.toLocaleString()}`
-        : "-",
-    },
-    {
-      label: "전체 조회수",
-      value: totalViews.current ? `${totalViews.current}회` : "-",
+      value:
+        totalInvestmentCost.current !== undefined
+          ? `$${totalInvestmentCost.current.toLocaleString()}`
+          : "-",
     },
     {
       label: "전체 참여수",
-      value: totalParticipation.current
-        ? `${totalParticipation.current}회`
-        : "-",
+      value:
+        totalParticipation.current !== undefined
+          ? `${totalParticipation.current}회`
+          : "-",
     },
   ];
 
   return (
     <Container>
       <Scoreboard data={SCOREBOARD_DATA} />
-      <ListTable
+      {/* <ListTable
         tableMarginTop={40}
         headerColumns={CAMPAIGN_RAKING_TABLE_HEADER}
         data={campaignStatusTableList}
         emptyTitle={"아직 등록된 캠페인이 없습니다."}
         emptyDescrip={"새로운 캠페인을 생성해주세요"}
+      /> */}
+      <GraphTab
+        marginTop={40}
+        curTab={rewardGraphCurTab}
+        tabs={REWARD_GRAPH_DATA}
+        changeTab={changeRewardGraphTab}
+        graphData={rewardGraphData}
+      />
+      <GraphTab
+        marginTop={40}
+        curTab={actionGraphCurTab}
+        tabs={ACTION_GRAPH_DATA}
+        changeTab={changeActionGraphTab}
+        graphData={actionGraphData}
       />
     </Container>
   );
 }
 
-const CAMPAIGN_RAKING_TABLE_HEADER = [
+const REWARD_GRAPH_DATA = [
   {
-    label: "State",
-    width: "9.37",
+    label: "평균 지출 대비 수익",
+    value: "1.2%",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "지출", color: "#B981EE" },
+          data: [10, 20, 50, 100, 60, 80, 50],
+
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "수익", color: "#57C7B6" },
+          data: [0, 20, 25, 70, 80, 85, 100],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
+    description: "평균 수익 / 평균 지출",
   },
   {
-    label: "캠페인명",
-    width: "39.58",
+    label: "조회수당 가격",
+    value: "$4.2",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [10, 50, 500, 0, 1, 66, 2],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [10, 20, 25, 50, 40, 60, 80],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
   {
-    label: "기간",
-    width: "20.83",
-  },
-  {
-    label: "모집 인원",
-    width: "10.41",
-  },
-  {
-    label: "반응률",
-    width: "10.41",
-    description: "반응률 = (좋아요 수 + 댓글 수 /전체 조회수)x100",
-    tooltipWidth: 308,
-  },
-  {
-    label: "상세분석",
-    width: "9.37",
+    label: "이벤트당 평균가격",
+    value: "$3.1",
+    description: "이것은 툴팁입니다. 툴팁 안의 텍스트를 입력해주세요",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [10, 20, 50, 100, 1, 66, 2],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [10, 20, 25, 50, 40, 60, 80],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
 ];
 
-const CAMPAIGNS_RANKING_DATA = [
+const ACTION_GRAPH_DATA = [
   {
-    rank: 1,
-    name: "캠신상 굿즈(슬리퍼+비치백 세트), 신제품(NEW 쉬림프) 출시 홍보 캠페인페인 이름1 adadsdsadadadadasdadkjalkdjklajdakldjkladjldjalkdj",
-    date: "2023.00.00 - 2023.00.00",
-    recruits: "4명",
-    reaction_rate: "60%",
-    content: "",
+    label: "전체 참여",
+    value: "53,230",
+    description: "이것은 툴팁입니다.\n 툴팁 안의 텍스트를 입력해주세요",
+    change: "increase",
+    changeDescription: "한달 전 보다 10% 증가했어요",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [10, 20, 50, 100, 1, 66, 2],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "순 조회수", color: "#B981EE" },
+          data: [10, 20, 25, 50, 40, 60, 80],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
   {
-    rank: 2,
-    name: "캠신상 굿즈(슬리퍼+비치백 세트), 신제품(NEW 쉬림프) 출시 홍보 캠페인페인 이름2",
-    date: "2023.00.00 - 2023.00.00",
-    recruits: "12명",
-    reaction_rate: "50%",
-    content: "",
+    label: "공유 횟수",
+    value: "7,322",
+    description: "이것은 툴팁입니다.\n 툴팁 안의 텍스트를 입력해주세요",
+    change: "decrease",
+    changeDescription: "한달 전 보다 20% 감소했어요",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [300, 200, 120, 500, 100, 263, 332],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [523, 232, 250, 150, 620, 230, 80],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
   {
-    rank: 3,
-    name: "캠신상 굿즈(슬리퍼+비치백 세트), 신제품(NEW 쉬림프) 출시 홍보 캠페인페인 이름3",
-    date: "2023.00.00 - 2023.00.00",
-    recruits: "20명",
-    reaction_rate: "60%",
-    content: "",
+    label: "댓글 수",
+    value: "12,300",
+    description: "이것은 툴팁입니다.\n 툴팁 안의 텍스트를 입력해주세요",
+    change: "decrease",
+    changeDescription: "한달 전 보다 20% 감소했어요",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [120, 252, 523, 400, 531, 623, 223],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [152, 220, 555, 740, 440, 610, 840],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
   {
-    rank: 4,
-    name: "캠신상 굿즈(슬리퍼+비치백 세트), 신제품(NEW 쉬림프) 출시 홍보 캠페인페인 이름",
-    date: "2023.00.00 - 2023.00.00",
-    recruits: "4명",
-    reaction_rate: "60%",
-    content: "",
+    label: "좋아요 수",
+    value: "12,300",
+    description: "이것은 툴팁입니다.\n툴팁 안의 텍스트를 입력해주세요",
+    change: "decrease",
+    changeDescription: "한달 전 보다 20% 감소했어요",
+    data: {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [150, 203, 505, 600, 132, 442, 324],
+          borderColor: "#57C7B6",
+          backgroundColor: "#57C7B6",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+        {
+          legend: { label: "총 조회수", color: "#57C7B6" },
+          data: [500, 660, 235, 640, 230, 660, 800],
+          borderColor: "#B981EE",
+          backgroundColor: "#B981EE",
+          borderWidth: 2.8,
+          lineTension: 0.35,
+        },
+      ],
+    },
   },
 ];

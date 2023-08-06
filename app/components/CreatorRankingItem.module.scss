@@ -1,5 +1,6 @@
 .container {
-    width: 49%;
+    cursor: pointer;
+    background-color: white;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -9,9 +10,14 @@
     line-height: 160%; /* 24px */
     letter-spacing: -0.225px;
     border-bottom: 1px solid #E6EAEF;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .basicInfoDiv { 
+    width: 250px;
     display: flex;
     flex-direction: row;
     align-items: center;

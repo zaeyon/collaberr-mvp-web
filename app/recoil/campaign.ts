@@ -49,7 +49,7 @@ export const campaignStatusTableState = selector({
     get: ({get}) => {
         const myCampaigns = get(myCampaignsState);
 
-        return myCampaigns.map((item, index) => {
+        return myCampaigns.map((item: any, index) => {
             return {
                 state: 
                 item.is_completed ? 'progress_complete' : 
@@ -59,7 +59,7 @@ export const campaignStatusTableState = selector({
                 item.is_active ? "proceeding" : "proceeding",
                 title: item.title,
                 date: getFormattedDate(item.start_date, ".")+ " - " + getFormattedDate(item.end_date, "."),          
-                quota: 10,
+                quota: item.approved_creators.length,
                 reaction_rate: "50%",
                 content: item.id,
             }

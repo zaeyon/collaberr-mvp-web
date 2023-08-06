@@ -66,14 +66,14 @@ export default function CreatorList({
         >
           유튜브
         </PlatformItem>
-        <PlatformItem
+        {/* <PlatformItem
           style={{ cursor: "default", userSelect: "none" }}
           onClick={() => 0}
           platform={"instagram"}
           curPlatform={curPlatform}
         >
           인스타그램
-        </PlatformItem>
+        </PlatformItem> */}
       </SelectPlatformDiv>
       <ListTable
         loading={loading}

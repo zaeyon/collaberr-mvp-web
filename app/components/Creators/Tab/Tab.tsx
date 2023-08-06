@@ -19,7 +19,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
 
-  border-bottom: 1px solid #d1d7df;
+  border-bottom: 1px solid #e6eaef;
 `;
 
 const TabItem = styled.div<TabItemProps>`
@@ -55,23 +55,19 @@ const Body = styled.div`
 `;
 
 interface props {
-  curTab: string;
   marginTop: number;
-  changeTab: (tab: string) => void;
   channelVideos: any[];
   uploadAnalysis: any;
 }
 
 export default function Tab({
-  curTab,
-  changeTab,
   marginTop = 52,
   channelVideos,
   uploadAnalysis,
 }: props) {
   return (
     <Container style={{ marginTop: marginTop }}>
-      <Header>
+      {/* <Header>
         <TabItem onClick={() => changeTab("follower")}>
           팔로워
           {curTab === "follower" && <ActiveBorder />}
@@ -99,6 +95,10 @@ export default function Tab({
             channelVideos={channelVideos}
           />
         )}
+      </Body> */}
+      <Header />
+      <Body>
+        <Upload uploadAnalysis={uploadAnalysis} channelVideos={channelVideos} />
       </Body>
     </Container>
   );

@@ -48,6 +48,7 @@ const Header = styled.div`
 `;
 
 const ProfileDiv = styled.div`
+  height: 64px;
   display: flex;
   flex-direction: row;
 `;
@@ -70,6 +71,7 @@ const Handle = styled.p`
 `;
 
 const CategoryListDiv = styled.div`
+  height: 33px;
   margin-top: 20px;
   display: flex;
   flex-direction: row;
@@ -95,6 +97,7 @@ const CategoryItem = styled.div`
 `;
 
 const MainInfoListDiv = styled.div`
+  height: 65px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -115,6 +118,7 @@ const MainInfoLabel = styled.p`
 `;
 
 const MainInfoValue = styled.p`
+  height: 24px;
   margin-top: 4px;
   color: #242d35;
   font-weight: 600;
@@ -129,18 +133,12 @@ const MainInfoDivider = styled.div`
 `;
 
 interface props {
-  curTab: string;
-  changeTab: (tab: string) => void;
   clickModalOutside: () => void;
   channelId: string;
 }
 
-export default function CreatorDetail({
-  clickModalOutside,
-  curTab,
-  changeTab,
-  channelId,
-}: props) {
+export default function CreatorDetail({ clickModalOutside, channelId }: props) {
+  const [loadingInfo, setLoadingInfo] = useState(false);
   const [channelInfo, setChannelInfo] = useState<any>({});
   const [channelVideos, setChannelVideos] = useState([]);
   const [uploadAnalysis, setUploadAnalysis] = useState({
@@ -150,6 +148,7 @@ export default function CreatorDetail({
   });
 
   useEffect(() => {
+    setLoadingInfo(true);
     const nowDate: any = new Date();
     const prevDate = new Date(nowDate);
     let uploadForYear: any = {};
@@ -168,13 +167,17 @@ export default function CreatorDetail({
       for (let i = 1; i <= 12; i++) {
         if (i < 12 - Number(nowDate.getMonth()) + 1) {
           console.log("i <= 12 - nowDate.getMonth() + 1", i);
+          const year = nowDate.getFullYear() - 1;
           uploadForYear[
-            `${nowDate.getFullYear() - 1}년 ${nowDate.getMonth() + i}월`
+            `${String(year)[2]}${String(year)[3]}. ${nowDate.getMonth() + i}`
           ] = 0;
         } else {
           console.log("i", i);
+          const year = nowDate.getFullYear();
           uploadForYear[
-            `${nowDate.getFullYear()}년 ${i - nowDate.getMonth() + 2}월`
+            `${String(year)[2]}${String(year)[3]}. ${
+              i - nowDate.getMonth() + 2
+            }`
           ] = 0;
         }
       }
@@ -186,9 +189,11 @@ export default function CreatorDetail({
       .then((res) => {
         console.log("GET_channelInfo success", res);
         setChannelInfo(res.data.items[0]);
+        setLoadingInfo(false);
       })
       .catch((err) => {
         console.log("GET_channelInfo err", err);
+        setLoadingInfo(false);
       });
 
     GET_channelVideos(channelId)
@@ -215,6 +220,8 @@ export default function CreatorDetail({
           const year = Number(video.snippet.publishedAt.split("-")[0]);
           const month = Number(video.snippet.publishedAt.split("-")[1]);
           const monthPrevDate = new Date(nowDate);
+          const nowYear = nowDate.getFullYear();
+          const nowMonth = nowDate.getMonth() + 1;
 
           console.log("year month", year, month);
           if (
@@ -223,7 +230,14 @@ export default function CreatorDetail({
           ) {
             recentlyUploadCount += 1;
           }
-          uploadForYear[`${year}년 ${month}월`] += 1;
+
+          if (`${year}-${month}` !== `${nowYear}-${nowMonth}`) {
+            console.log(`${year}-${month}`);
+            console.log(`${nowYear}-${nowMonth}`);
+            uploadForYear[
+              `${String(year)[2]}${String(year)[3]}. ${month}`
+            ] += 1;
+          }
         });
 
         console.log("uploadForYear 할당", uploadForYear);
@@ -292,8 +306,10 @@ export default function CreatorDetail({
               alt={"icon_profile_default"}
             />
             <ChannelNameDiv>
-              <Name>{channelInfo?.snippet?.title}</Name>
-              <Handle>{channelInfo?.snippet?.customUrl}</Handle>
+              <Name>{!loadingInfo ? channelInfo?.snippet?.title : ""}</Name>
+              <Handle>
+                {!loadingInfo ? channelInfo?.snippet?.customUrl : ""}
+              </Handle>
             </ChannelNameDiv>
           </ProfileDiv>
           <Link
@@ -320,46 +336,60 @@ export default function CreatorDetail({
         <MainInfoListDiv>
           <MainInfoItem>
             <MainInfoLabel>{"구독자"}</MainInfoLabel>
-            <MainInfoValue>{`${Number(
-              channelInfo?.statistics?.subscriberCount
-            ).toLocaleString()}명`}</MainInfoValue>
+            <MainInfoValue>
+              {!loadingInfo
+                ? `${Number(
+                    channelInfo?.statistics?.subscriberCount
+                  ).toLocaleString()}명`
+                : ""}
+            </MainInfoValue>
           </MainInfoItem>
           <MainInfoDivider />
           <MainInfoItem>
             <MainInfoLabel>{"총 조회수"}</MainInfoLabel>
-            <MainInfoValue>{`${Number(
-              channelInfo?.statistics?.viewCount
-            ).toLocaleString()}회`}</MainInfoValue>
+            <MainInfoValue>
+              {!loadingInfo
+                ? `${Number(
+                    channelInfo?.statistics?.viewCount
+                  ).toLocaleString()}회`
+                : ""}
+            </MainInfoValue>
           </MainInfoItem>
           <MainInfoDivider />
           <MainInfoItem>
             <MainInfoLabel>{"등록 영상"}</MainInfoLabel>
-            <MainInfoValue>{`${Number(
-              channelInfo?.statistics?.videoCount
-            ).toLocaleString()}개`}</MainInfoValue>
+            <MainInfoValue>
+              {!loadingInfo
+                ? `${Number(
+                    channelInfo?.statistics?.videoCount
+                  ).toLocaleString()}개`
+                : ""}
+            </MainInfoValue>
           </MainInfoItem>
           <MainInfoDivider />
           <MainInfoItem>
             <MainInfoLabel>{"국가"}</MainInfoLabel>
             <MainInfoValue>
-              {getCountryName(channelInfo?.snippet?.country)}
+              {!loadingInfo
+                ? getCountryName(channelInfo?.snippet?.country)
+                : ""}
             </MainInfoValue>
           </MainInfoItem>
           <MainInfoDivider />
           <MainInfoItem>
             <MainInfoLabel>{"가입일"}</MainInfoLabel>
             <MainInfoValue>
-              {getFormattedDate(
-                new Date(channelInfo?.snippet?.publishedAt),
-                "."
-              )}
+              {!loadingInfo
+                ? getFormattedDate(
+                    new Date(channelInfo?.snippet?.publishedAt),
+                    "."
+                  )
+                : ""}
             </MainInfoValue>
           </MainInfoItem>
         </MainInfoListDiv>
         <Tab
-          marginTop={40}
-          curTab={curTab}
-          changeTab={changeTab}
+          marginTop={25}
           channelVideos={channelVideos}
           uploadAnalysis={uploadAnalysis}
         />

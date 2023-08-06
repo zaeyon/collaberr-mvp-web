@@ -1,6 +1,6 @@
 import { baseUrl } from ".";
 import axios from "axios";
-const YOUTUBE_API_KEY = "AIzaSyCjOasAZOb_7DBmq_AXOyR_ZoUqiq7IiiM";
+const YOUTUBE_API_KEY = "AIzaSyAzYox5VDV886jBU9XmNNTrAgaFc9ujkjM";
 const YOUTUBE_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export const GET_youtubeAuth = () => {
@@ -51,6 +51,7 @@ export const GET_channelVideosPublisedAfter = (channelId: string, date: string) 
         })
         .catch((err) => {
           console.log("err", err)
+          return;
         })
       }
       return videos;

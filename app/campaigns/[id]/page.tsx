@@ -19,6 +19,7 @@ export default function Page({ params }: { params: { id: number } }) {
   const [isBookmark, setIsBookmark] = useState(false);
   const [isReviewCreatorInfoModal, setIsReviewCreatorInfoModal] =
     useState(false);
+  const [loading, setLoading] = useState(true);
   const toastRef = useRef<any>();
 
   const [campaignItem, setCampaignItem] = useState<campaignType>({
@@ -39,47 +40,60 @@ export default function Page({ params }: { params: { id: number } }) {
   });
 
   useEffect(() => {
+    setLoading(true);
     GET_showCampaign(params.id)
       .then((res) => {
         console.log("GET_showCampaign success", res);
         setCampaignItem(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log("GET_showCampaign fail", err);
+        setLoading(false);
       });
   }, []);
 
   const clickJoinCampaign = () => {
-    setIsReviewCreatorInfoModal(true);
+    //setIsReviewCreatorInfoModal(true);
+    submitJoinCampaign();
   };
 
   const submitJoinCampaign = () => {
-    POST_joinCampaign(params.id)
-      .then((res) => {
-        console.log("POST_joinCampaign success", res);
-        if (!toast.visible) {
-          setToast({
-            visible: true,
-            message: "Successfully applied.",
-            type: "confirm",
-            request: "/campaigns/joincampaign",
-          });
-          toastRef.current.show();
-          setIsReviewCreatorInfoModal(false);
-        }
-      })
-      .catch((err) => {
-        console.log("POST_joinCampaign err", err);
-        if (!toast.visible) {
-          setToast({
-            visible: true,
-            message: "This campaign has already been applied.",
-            type: "exclamation",
-            request: "/campaigns/joincampaign",
-          });
-          toastRef.current.show();
-        }
+    if (!toast.visible) {
+      setToast({
+        visible: true,
+        message: "서비스 준비중입니다.",
+        type: "warning",
+        request: "/campaigns/joincampaign",
       });
+      toastRef.current.show();
+    }
+    // POST_joinCampaign(params.id)
+    //   .then((res) => {
+    //     console.log("POST_joinCampaign success", res);
+    //     if (!toast.visible) {
+    //       setToast({
+    //         visible: true,
+    //         message: "Successfully applied.",
+    //         type: "confirm",
+    //         request: "/campaigns/joincampaign",
+    //       });
+    //       toastRef.current.show();
+    //       setIsReviewCreatorInfoModal(false);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log("POST_joinCampaign err", err);
+    //     if (!toast.visible) {
+    //       setToast({
+    //         visible: true,
+    //         message: "This campaign has already been applied.",
+    //         type: "exclamation",
+    //         request: "/campaigns/joincampaign",
+    //       });
+    //       toastRef.current.show();
+    //     }
+    //   });
   };
 
   const closeModal = () => {
@@ -103,6 +117,7 @@ export default function Page({ params }: { params: { id: number } }) {
     <main className={styles.main}>
       <div style={{ width: "62%" }}>
         <CampaignDetail
+          loading={loading}
           isBookmark={isBookmark}
           clickBookmark={clickBookmark}
           type={"detail"}
@@ -120,6 +135,7 @@ export default function Page({ params }: { params: { id: number } }) {
         />
       </div>
       <JoinCampaign
+        loading={loading}
         campaignItem={campaignItem}
         clickJoinCampaign={clickJoinCampaign}
       />

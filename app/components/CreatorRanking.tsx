@@ -10,11 +10,13 @@ interface props {
   curCategory: { value: string; kr: string };
   selectCategory: (category: { value: string; kr: string }) => void;
   creatorRankingData: any;
+  openCreatorDetail: any;
 }
 export default function CreatorRanking({
   curCategory,
   selectCategory,
   creatorRankingData,
+  openCreatorDetail,
 }: props) {
   return (
     <div>
@@ -38,6 +40,7 @@ export default function CreatorRanking({
         {creatorRankingData.map((creator: any, index: number) => {
           return (
             <CreatorRankingItem
+              openCreatorDetail={openCreatorDetail}
               index={index}
               key={index}
               creatorData={creator}

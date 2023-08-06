@@ -40,6 +40,7 @@ interface props {
   openCreatorDetail?: () => void;
   renderTableItem?: any;
   renderSkeletonItem?: any;
+  moveToCampaignDetail?: (campaignId: number) => void;
 }
 
 export default function ListTable({
@@ -58,6 +59,7 @@ export default function ListTable({
   openCreatorDetail,
   renderTableItem,
   renderSkeletonItem,
+  moveToCampaignDetail,
 }: props) {
   const copyText = (text: string) => {
     window.navigator.clipboard.writeText(text);
@@ -109,16 +111,26 @@ export default function ListTable({
           })}
         </div>
         {!renderTableItem &&
-          data.map((item, dataIndex) => {
-            const keyValueArr = Object.entries(item);
+          data.map((campaign, dataIndex) => {
+            const keyValueArr = Object.entries(campaign);
             return (
-              <div className={styles.dataRow} key={dataIndex}>
+              <div
+                onClick={() =>
+                  moveToCampaignDetail
+                    ? moveToCampaignDetail(campaign.content)
+                    : ""
+                }
+                className={styles.dataRow}
+                key={dataIndex}
+              >
                 {keyValueArr.map((item: any, index) => {
                   if (item[0] === "name" || item[0] === "title") {
                     return (
                       <div
                         className={styles.dataItem}
-                        style={{ width: `${headerColumns[index].width}%` }}
+                        style={{
+                          width: `${headerColumns[index].width}%`,
+                        }}
                         key={index}
                       >
                         <span className={styles.dataColumn}>{item[1]}</span>
@@ -135,7 +147,10 @@ export default function ListTable({
                         key={index}
                       >
                         <span className={styles.dataColumn}>
-                          <Link href={`/mycampaigns/manage/${item[1]}/recruit`}>
+                          <Link
+                            onClick={(event) => event.stopPropagation()}
+                            href={`/mycampaigns/manage/${item[1]}/recruit`}
+                          >
                             <Button
                               label={"보기"}
                               style={"tertiery"}
