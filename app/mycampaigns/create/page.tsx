@@ -65,6 +65,7 @@ export default function Create() {
   const [isVisModal, setIsVisModal] = useState<boolean>(false);
 
   const [toast, setToast] = useRecoilState(toastState);
+  const toastRef = useRef<any>();
 
   const router = useRouter();
 
@@ -144,7 +145,7 @@ export default function Create() {
         if (!toast.visible) {
           setToast({
             visible: true,
-            message: "Campaign registered successfully!",
+            message: "캠페인이 등록되었습니다!",
             type: "confirm",
             request: "/mycampaigns/create",
           });
@@ -153,6 +154,16 @@ export default function Create() {
       .catch((err) => {
         setLoading(false);
         console.log("POST_createCampaign err", err);
+
+        if (!toast.visible) {
+          setToast({
+            visible: true,
+            message: "캠페인 등록에 실패하였습니다.",
+            type: "exclamation",
+            request: "/mycampaigns/create",
+          });
+          toastRef.current?.show();
+        }
       });
   };
 
@@ -334,6 +345,7 @@ export default function Create() {
           />
         </LoaderDiv>
       )}
+      <Toast ref={toastRef} />
     </Container>
   );
 }

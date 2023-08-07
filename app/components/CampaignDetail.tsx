@@ -107,11 +107,12 @@ export default function CampaignDetail({
             </div>
           </div>
           <div className={styles.label}>Campaign Information</div>
-          <div className={styles.description}>
+          <pre className={styles.description}>
             {description ? description : "Campaign description"}
-          </div>
+          </pre>
           <div className={styles.label}>Mission</div>
           <CampaignDetailIconItem
+            platform={platform}
             value={missionType !== "default" ? missionType : ""}
             type={"mission"}
           />
@@ -120,7 +121,7 @@ export default function CampaignDetail({
             value={"$ " + bid?.toLocaleString()}
             type={"rewards"}
           />
-          <div className={styles.label}>Files</div>
+          {/* <div className={styles.label}>Files</div>
           {/* <div className={styles.fileItemContainer}>
             <Image width={24} height={24} alt={"icon_clip"} src={icon_clip} />
             <span className={styles.filePath}>{""}</span>

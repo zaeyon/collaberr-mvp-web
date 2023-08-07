@@ -28,7 +28,7 @@ const PreviewInnerContainer = styled.div`
   height: 79vh;
   width: 90%;
   margin-top: 8px;
-  padding: 48px 16px 30px 16px;
+  padding: 16px 16px 30px 16px;
   border-radius: 16px;
   background-color: white;
   white-space: normal;
