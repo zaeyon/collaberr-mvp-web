@@ -55,12 +55,16 @@ const Body = styled.div`
 `;
 
 interface props {
+  loadingVideos: boolean;
+  loadingAnalysis: boolean;
   marginTop: number;
   channelVideos: any[];
   uploadAnalysis: any;
 }
 
 export default function Tab({
+  loadingAnalysis,
+  loadingVideos,
   marginTop = 52,
   channelVideos,
   uploadAnalysis,
@@ -98,7 +102,12 @@ export default function Tab({
       </Body> */}
       <Header />
       <Body>
-        <Upload uploadAnalysis={uploadAnalysis} channelVideos={channelVideos} />
+        <Upload
+          loadingAnalysis={loadingAnalysis}
+          loadingVideos={loadingVideos}
+          uploadAnalysis={uploadAnalysis}
+          channelVideos={channelVideos}
+        />
       </Body>
     </Container>
   );

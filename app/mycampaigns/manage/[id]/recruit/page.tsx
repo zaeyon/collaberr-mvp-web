@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { getDday } from "@/app/lib/date";
 
 import {
   GET_showCreatorForCampaign,
@@ -31,45 +32,80 @@ export default function RecruitManage() {
   const [declinedCreatorArr, setDeclinedCreatorArr] = useState<any>([]);
   const [selectedCreatorArr, setSelectedCreatorArr] = useState<any[]>([]);
   const [allSelected, setAllSelected] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const params = useParams();
 
+  const SCOREBOARD_DATA = [
+    {
+      label: "모집 정원",
+      value: "10명",
+    },
+    {
+      label: "모집된 참가자",
+      value: `${approvedCreatorArr.length}명`,
+    },
+    {
+      label: "예상 지출금액",
+      value: "$1,000",
+    },
+    {
+      label: "모집 마감까지",
+      value: "D-10",
+    },
+  ];
+
   useEffect(() => {
-    console.log("RecruitManage params", params);
-    GET_showCreatorForCampaign(Number(params.id))
-      .then((res) => {
-        console.log("GET_showCreatorForCampaign res", res);
-        setRequestedCreatorArr(
-          res.data.requested.map((item: any) => {
-            return {
-              selected: false,
-              state: "request_recruit",
-              ...item,
-            };
-          })
-        );
-        setApprovedCreatorArr(
-          res.data.approved.map((item: any) => {
-            return {
-              state: "approve_recruit",
-              ...item,
-            };
-          })
-        );
-        setDeclinedCreatorArr(
-          res.data.declined.map((item: any) => {
-            return {
-              state: "decline_recruit",
-              ...item,
-            };
-          })
-        );
-      })
-      .catch((err) => {
-        console.log("GET_showCreatorForCampaign err", err);
+    setLoading(true);
+    async function getInitialData() {
+      const initialData = await REQUESTED_CREATORS_DATA.map((item) => {
+        return {
+          ...item,
+          selected: false,
+        };
       });
+      setRequestedCreatorArr(initialData);
+    }
+    getInitialData();
+    setLoading(false);
   }, []);
+
+  // useEffect(() => {
+  //   console.log("RecruitManage params", params);
+  //   GET_showCreatorForCampaign(Number(params.id))
+  //     .then((res) => {
+  //       console.log("GET_showCreatorForCampaign res", res);
+  //       setRequestedCreatorArr(
+  //         res.data.requested.map((item: any) => {
+  //           return {
+  //             selected: false,
+  //             state: "request_recruit",
+  //             ...item,
+  //           };
+  //         })
+  //       );
+  //       setApprovedCreatorArr(
+  //         res.data.approved.map((item: any) => {
+  //           return {
+  //             state: "approve_recruit",
+  //             ...item,
+  //           };
+  //         })
+  //       );
+  //       setDeclinedCreatorArr(
+  //         res.data.declined.map((item: any) => {
+  //           return {
+  //             state: "decline_recruit",
+  //             ...item,
+  //           };
+  //         })
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       console.log("GET_showCreatorForCampaign err", err);
+  //     });
+  // }, []);
 
   const clickCheckbox = useCallback(
     (index?: number) => {
@@ -123,49 +159,52 @@ export default function RecruitManage() {
 
   const clickSetCreatorsState = (state: string) => {
     const selectedCreatorIdArr = selectedCreatorArr.map((item) => item.id);
+    const tmpSelectedCreatorArr = [...selectedCreatorArr];
 
-    PUT_setCreatorsState(params.id, selectedCreatorIdArr, state)
-      .then((res) => {
-        console.log("PUT_setCreatorsState res", res);
-        setAllSelected(false);
-        setSelectedCreatorArr([]);
-        setRequestedCreatorArr((prev: any) =>
-          prev.filter((item: any) => {
-            return item.selected === false;
-          })
-        );
-
-        if (state === "approve") {
-          const tmpCreatorArr = selectedCreatorArr.map((item) => {
-            delete item.selected;
-            return {
-              ...item,
-              state: "approve_recruit",
-            };
-          });
-
-          setApprovedCreatorArr((prev: any) => prev.concat(tmpCreatorArr));
-        }
-        if (state === "decline") {
-          const tmpCreatorArr = selectedCreatorArr.map((item) => {
-            delete item.selected;
-            return {
-              ...item,
-              state: "decline_recruit",
-            };
-          });
-          setDeclinedCreatorArr((prev: any) => prev.concat(tmpCreatorArr));
-        }
+    setAllSelected(false);
+    setSelectedCreatorArr([]);
+    setRequestedCreatorArr((prev: any) =>
+      prev.filter((item: any) => {
+        return item.selected === false;
       })
-      .catch((err) => {
-        console.log("PUT_setCreatorsState err", err);
+    );
+
+    if (state === "approve") {
+      const tmpCreatorArr = tmpSelectedCreatorArr.map((item) => {
+        delete item.selected;
+        return {
+          ...item,
+          state: "approve_recruit",
+        };
       });
+
+      setApprovedCreatorArr((prev: any) => prev.concat(tmpCreatorArr));
+    }
+    if (state === "decline") {
+      const tmpCreatorArr = tmpSelectedCreatorArr.map((item) => {
+        delete item.selected;
+        return {
+          ...item,
+          state: "decline_recruit",
+        };
+      });
+      setDeclinedCreatorArr((prev: any) => prev.concat(tmpCreatorArr));
+    }
+
+    // PUT_setCreatorsState(params.id, selectedCreatorIdArr, state)
+    //   .then((res) => {
+    //     console.log("PUT_setCreatorsState res", res);
+    //   })
+    //   .catch((err) => {
+    //     console.log("PUT_setCreatorsState err", err);
+    //   });
   };
 
   return (
     <Container>
       <Scoreboard marginTop={24} data={SCOREBOARD_DATA} />
       <ListTable
+        loading={loading}
         marginTop={64}
         tableMarginTop={8}
         title={"캠페인 참여요청"}
@@ -213,25 +252,6 @@ export default function RecruitManage() {
   );
 }
 
-const SCOREBOARD_DATA = [
-  {
-    label: "모집 정원",
-    value: "6명",
-  },
-  {
-    label: "모집된 참가자",
-    value: "2명",
-  },
-  {
-    label: "예상 지출금액",
-    value: "$1,000",
-  },
-  {
-    label: "모집 마감까지",
-    value: "D-4",
-  },
-];
-
 const CAMPAIGN_JOIN_REQUEST_TABLE_HEADER = [
   {
     label: "selected",
@@ -267,106 +287,66 @@ const CAMPAIGN_JOIN_REQUEST_TABLE_HEADER = [
   },
 ];
 
-const CAMPAIGN_JOIN_REQUEST_TABLE_DATA = [
+const REQUESTED_CREATORS_DATA = [
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
+    state: "request_recruit",
+    name: "jeffreestar",
+    subscribers_num: 15900000,
+    aver_comment_num: 46500,
+    aver_like_num: 126400,
+    recent_upload: 11,
+    url: "https://www.youtube.com/@jeffreestar",
   },
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
+    state: "request_recruit",
+    name: "Tati",
+    subscribers_num: 8360000,
+    aver_comment_num: 1700,
+    aver_like_num: 30200,
+    recent_upload: 20,
+    url: "https://www.youtube.com/@Tati",
   },
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
+    state: "request_recruit",
+    name: "Laura Lee",
+    subscribers_num: 4610000,
+    aver_comment_num: 600,
+    aver_like_num: 2300,
     recent_upload: 31,
-    url: "https://www.youtube.com/",
+    url: "https://www.youtube.com/@laura88lee",
   },
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
+    state: "request_recruit",
+    name: "KatieAngel",
+    subscribers_num: 18000000,
+    aver_comment_num: 3521,
+    aver_like_num: 250021,
+    recent_upload: 25,
+    url: "https://www.youtube.com/@KatieAngelTV_",
   },
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
+    state: "request_recruit",
+    name: "Roman Sharf",
+    subscribers_num: 372000,
+    aver_comment_num: 2452,
+    aver_like_num: 10012,
+    recent_upload: 38,
+    url: "https://www.youtube.com/@RomanSharf",
   },
   {
     selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
+    state: "request_recruit",
+    name: "JOON",
+    subscribers_num: 6030000,
+    aver_comment_num: 62010,
+    aver_like_num: 25012,
     recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    selected: false,
-    state: "request",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
+    url: "https://www.youtube.com/@joongadgets",
   },
 ];
 
@@ -398,191 +378,5 @@ const CREATOR_TABLE_HEADER = [
   {
     label: "채널",
     width: "4.16",
-  },
-];
-
-const CONFIRMED_CREATOR_TABLE_DATA = [
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_confirmed",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-];
-
-const REJECTED_CREATOR_TABLE_DATA = [
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
-  },
-  {
-    state: "participation_rejected",
-    name: "Creator Name",
-    subscribers_num: 4234,
-    aver_comment_num: 200,
-    aver_like_num: 20012,
-    recent_upload: 31,
-    url: "https://www.youtube.com/",
   },
 ];

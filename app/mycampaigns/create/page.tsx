@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState, useRecoilState } from "recoil";
+import { ColorRing } from "react-loader-spinner";
 
 import CampaignPreview from "@/app/components/CampaignPreview";
 import CamapignForm from "@/app/components/CampaignForm";
@@ -11,6 +12,7 @@ import { getFormattedDate } from "@/app/lib/date";
 import { POST_createCampaign } from "@/app/api/campaign";
 import { campaignType } from "@/app/type/campaign";
 import { toastState } from "@/app/recoil/user";
+import Toast from "@/app/components/Toast";
 
 const Container = styled.div``;
 
@@ -21,6 +23,19 @@ const CampaignCreateDiv = styled.div`
   flex-direction: row;
   width: 100%;
   height: 100%;
+`;
+
+const LoaderDiv = styled.div`
+  z-index: 4;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #242d3530;
 `;
 
 export default function Create() {
@@ -45,6 +60,7 @@ export default function Create() {
   const [shownStartDate, setShownStartDate] = useState<string>("");
   const [shownEndDate, setShownEndDate] = useState<string>("");
   const [period, setPeriod] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [isVisModal, setIsVisModal] = useState<boolean>(false);
 
@@ -68,7 +84,8 @@ export default function Create() {
       recruitStartDate &&
       description &&
       missionType !== "default" &&
-      bid
+      bid &&
+      String(bid).length < 10
     ) {
       setInvaildForm(false);
     } else {
@@ -100,6 +117,7 @@ export default function Create() {
   };
 
   const submitCampaignCreate = () => {
+    setLoading(true);
     setIsVisModal(false);
     const newCampaign: any = {
       brand_name: brandName,
@@ -119,6 +137,7 @@ export default function Create() {
 
     POST_createCampaign(newCampaign)
       .then((res) => {
+        setLoading(false);
         console.log("POST_createCampaign success", res);
         router.push("/mycampaigns");
 
@@ -132,6 +151,7 @@ export default function Create() {
         }
       })
       .catch((err) => {
+        setLoading(false);
         console.log("POST_createCampaign err", err);
       });
   };
@@ -300,6 +320,19 @@ export default function Create() {
           }
           closeModal={() => setIsVisModal(false)}
         />
+      )}
+      {loading && (
+        <LoaderDiv>
+          <ColorRing
+            visible={true}
+            height="43"
+            width="43"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+          />
+        </LoaderDiv>
       )}
     </Container>
   );

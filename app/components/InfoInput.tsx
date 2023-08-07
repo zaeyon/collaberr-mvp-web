@@ -238,6 +238,9 @@ export default function InfoInput({
       {isInvaildEmail && <Error>Enter a valid email address.</Error>}
       {isInconPassword && <Error>Passwords do not match</Error>}
       {description && <Description>{description}</Description>}
+      {label === "Campaign Bid" && String(value).length >= 10 && (
+        <Error>Campaign rewards must be less than $1 billion</Error>
+      )}
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 import { baseUrl } from ".";
 import axios from "axios";
-const YOUTUBE_API_KEY = "AIzaSyAzYox5VDV886jBU9XmNNTrAgaFc9ujkjM";
+const YOUTUBE_API_KEY = "AIzaSyCdE32XjchMShwkZSm8kd1dwiOQuBotCPg";
 const YOUTUBE_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export const GET_youtubeAuth = () => {
@@ -35,40 +35,50 @@ export const GET_channelVideosPublisedAfter = (channelId: string, date: string) 
   const nowDate = new Date();
   const publisedBefore = `${nowDate.getFullYear()}-${nowDate.getMonth() + 1}-00T00:00:00Z`;
 
-  const promise: any =  axios.get(
-    `${YOUTUBE_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet&type=video&order=date&maxResults=50&publishedAfter=${date}&publisedBefore=${publisedBefore}`
-  ).then(async (res) => {
-    videos = [...res.data.items];
-    console.log("res", res);
-    if(res.data.nextPageToken) {
-      totalResult = res.data.pageInfo.totalResults;
-      while(totalResult > videos.length) {
-        await axios.get(
-          `${YOUTUBE_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet&type=video&order=date&maxResults=50&pageToken=${pageToken}&publishedAfter=${date}&publisedBefore=${publisedBefore}`
-        ).then((res) => {
-          videos = [...videos, ...res.data.items]
-          if(videos.length < totalResult) pageToken = res.data.nextPageToken;
-        })
-        .catch((err) => {
-          console.log("err", err)
-          return;
-        })
+  try {
+    const promise: any =  axios.get(
+      `${YOUTUBE_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet&type=video&order=date&maxResults=50&publishedAfter=${date}&publisedBefore=${publisedBefore}`
+    ).then(async (res) => {
+      videos = [...res.data.items];
+      console.log("res", res);
+      if(res.data.nextPageToken) {
+        totalResult = res.data.pageInfo.totalResults;
+        while(totalResult > videos.length) {
+          let isError = false;
+          try {
+            await axios.get(
+              `${YOUTUBE_BASE_URL}/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet&type=video&order=date&maxResults=50&pageToken=${pageToken}&publishedAfter=${date}&publisedBefore=${publisedBefore}`
+            ).then((res) => {
+              videos = [...videos, ...res.data.items]
+              if(videos.length < totalResult) pageToken = res.data.nextPageToken;
+            })
+            .catch((err) => {
+              console.log("err1", err)
+              isError = true;
+              return;
+            })
+            if(isError) break;
+          } catch {
+            break;
+          }
+        }
+        return videos;
+      } else {
+        return videos;
       }
-      return videos;
-    } else {
-      return videos;
-    }
-
-  })
-  .catch((err) => {
-    console.log("err", err)
-  })
+  
+    })
+    .catch((err) => {
+      console.log("err2", err);
+      return;
+    })
 
   const result = promise.then((res: any) => res);
 
   return result;
-
-
+  } catch {
+    throw Error("GET_channelVideosPublisedAfter err")
+  }
 }
 
 export const GET_channelInfo = (channelId: string) => {

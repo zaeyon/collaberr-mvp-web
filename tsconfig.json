@@ -31,6 +31,6 @@
     "app/mycampaigns/page.tsx",
     "server/index.js",
     "app/components/loader/SkeletonCard.jsx"
-, "app/components/loader/SkeletonTable.jsx", "app/api/campaign.js"  ],
+, "app/components/loader/SkeletonTable.jsx", "app/api/campaign.js", "app/components/Dashboard/BarChart.jsx"  ],
   "exclude": ["node_modules"]
 }

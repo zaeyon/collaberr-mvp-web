@@ -1,20 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import styled from "@emotion/styled";
 import { useRecoilValue } from "recoil";
+import { myCampaignsState } from "../recoil/campaign";
 
-import {
-  myCampaignsState,
-  myCampaignsTableListState,
-} from "../recoil/campaign";
 import Button from "./Button";
-import MyCampaignListItem from "./MyCampaignListItem";
 import ListTable from "./ListTable";
-
-const DynamicListTable = dynamic(() => import("./ListTable"), {
-  ssr: false,
-});
+import MyCampaignsTableItem from "./Campaigns/MyCampaignsTableItem";
 
 const Container = styled.div`
   width: 100%;
@@ -30,42 +22,18 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
-const TableContainer = styled.div`
-  margin-top: 14px;
-`;
-
-const TableColumn = styled.div`
-  display: flex;
-  flex-direction: row;
-  background-color: #f1f4f7;
-`;
-
-const ColumnItem = styled.div`
-  min-width: 0px;
-  display: flex;
-  justify-content: center;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  font-family: "Pretendard";
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: -0.015em;
-  color: #35424c;
-`;
-
-const ColumnSpan = styled.span`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
 interface props {
+  loading: boolean;
   moveToCampaignDetail: (campaignId: number) => void;
+  moveToCampaignManage: (event: any, campaignId: number) => void;
 }
 
-export default function MyCampaignList({ moveToCampaignDetail }: props) {
-  const myCampaigns = useRecoilValue(myCampaignsTableListState);
+export default function MyCampaignList({
+  loading,
+  moveToCampaignDetail,
+  moveToCampaignManage,
+}: props) {
+  const myCampaigns = useRecoilValue(myCampaignsState);
 
   const router = useRouter();
 
@@ -81,13 +49,22 @@ export default function MyCampaignList({ moveToCampaignDetail }: props) {
           onClick={() => router.push("/mycampaigns/create")}
         />
       </Header>
-      <DynamicListTable
+      <ListTable
+        loading={loading}
         data={myCampaigns}
         tableMarginTop={14}
         headerColumns={MY_CAMPAIGNS_TABLE_HEADER}
         emptyTitle={"아직 등록된 캠페인이 없습니다."}
         emptyDescrip={"새로운 캠페인을 생성해주세요."}
         moveToCampaignDetail={moveToCampaignDetail}
+        renderTableItem={(item: any) => (
+          <MyCampaignsTableItem
+            key={item.id}
+            campaignData={item}
+            moveToCampaignDetail={moveToCampaignDetail}
+            moveToCampaignManage={moveToCampaignManage}
+          />
+        )}
       />
     </Container>
   );

@@ -46,19 +46,13 @@ export default function Dashboard() {
     GET_showMyCampaigns()
       .then((res) => {
         console.log("GET_showMyCampaigns success", res);
-        setMyCampaigns(res.data);
-        totalInvestmentCost.current = res.data.reduce(
-          (sum: number, item: any) => {
-            return (sum += item.reward * item.approved_creators.length);
-          },
-          0
-        );
-        totalParticipation.current = res.data.reduce(
-          (sum: number, item: any) => {
-            return (sum += item.approved_creators.length);
-          },
-          0
-        );
+        setMyCampaigns(res);
+        totalInvestmentCost.current = res.reduce((sum: number, item: any) => {
+          return (sum += item.reward * item.approved_creators.length);
+        }, 0);
+        totalParticipation.current = res.reduce((sum: number, item: any) => {
+          return (sum += item.approved_creators.length);
+        }, 0);
       })
       .catch((err) => {
         console.log("GET_showMyCampaign err", err);
@@ -117,7 +111,7 @@ export default function Dashboard() {
 const REWARD_GRAPH_DATA = [
   {
     label: "평균 지출 대비 수익",
-    value: "1.2%",
+    value: "10.2%",
     data: {
       labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
@@ -132,7 +126,7 @@ const REWARD_GRAPH_DATA = [
         },
         {
           legend: { label: "수익", color: "#57C7B6" },
-          data: [0, 20, 25, 70, 80, 85, 100],
+          data: [0, 20, 25, 90, 180, 185, 200],
           borderColor: "#57C7B6",
           backgroundColor: "#57C7B6",
           borderWidth: 2.8,

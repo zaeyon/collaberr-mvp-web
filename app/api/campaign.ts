@@ -37,16 +37,17 @@ export const GET_showAllCampaigns = async () => {
     const res = await fetch(`${baseUrl}/api/campaigns/all/`);
     //const response = promise.then((res) => res);
     if(!res.ok) {
-       throw Error("Error");
+       throw Error("GET_showAllCampaigns err");
     }
     return res.json();
 }
 
-export const GET_showMyCampaigns = () => {
-    const promise = axios.get(`${baseUrl}/api/campaigns/`);
-    const response = promise.then((res) => res);
-
-    return response;
+export const GET_showMyCampaigns = async () => {
+  const res = await fetch(`${baseUrl}/api/campaigns/all/`);
+  if(!res.ok) {
+    throw Error("GET_showMyCampaigns err");
+  }
+  return res.json();
 }
 
 export const GET_showCampaign = (campaignId: number) => {

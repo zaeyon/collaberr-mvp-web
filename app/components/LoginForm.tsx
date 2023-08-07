@@ -123,8 +123,8 @@ export default function LoginForm({
         />
         <div>
           <TextLink href={"/signup"}>I’m new</TextLink>
-          <Divider>|</Divider>
-          <TextLink href={"/passwordreset"}>Lost password</TextLink>
+          {/* <Divider>|</Divider>
+          <TextLink href={"/passwordreset"}>Lost password</TextLink> */}
         </div>
       </Footer>
     </Form>

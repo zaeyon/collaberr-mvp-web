@@ -43,10 +43,11 @@ export default function DashboardLayout({
   return (
     <section>
       <main>
-        <h1>캠페인 성과</h1>
-        <div style={{ marginTop: 10, color: "#8696AB", fontSize: 15 }}>
-          ⚠️ 현재 대시보드는 서비스 준비중으로 임시 데이터 입니다.
+        <div style={{ marginBottom: 10, color: "#8696AB", fontSize: 15 }}>
+          ⚠️ 현재 대시보드는 서비스 준비중으로 더미 데이터로 처리하였습니다.
         </div>
+        <h1>캠페인 성과</h1>
+
         {/* <ShownDateButton
             year={year}
             month={month}

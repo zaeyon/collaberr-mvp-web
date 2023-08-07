@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./CampaignDetail.module.scss";
+import { ColorRing } from "react-loader-spinner";
 
 import thumbnail from "../assets/campaign_thumbnail.jpeg";
 import icon_clip from "../assets/icons/icon_clip.png";
@@ -52,7 +53,9 @@ export default function CampaignDetail({
     >
       <div
         style={
-          type === "create" ? { width: "auto" } : { width: "100%", height: 400 }
+          type === "create"
+            ? { width: "auto", height: 400 }
+            : { width: "100%", height: 400 }
         }
         className={styles.thumbnailImageDiv}
       >
@@ -113,12 +116,28 @@ export default function CampaignDetail({
             type={"mission"}
           />
           <div className={styles.label}>Rewards</div>
-          <CampaignDetailIconItem value={"$ " + bid} type={"rewards"} />
+          <CampaignDetailIconItem
+            value={"$ " + bid?.toLocaleString()}
+            type={"rewards"}
+          />
           <div className={styles.label}>Files</div>
-          <div className={styles.fileItemContainer}>
+          {/* <div className={styles.fileItemContainer}>
             <Image width={24} height={24} alt={"icon_clip"} src={icon_clip} />
             <span className={styles.filePath}>{""}</span>
-          </div>
+          </div> */}
+        </div>
+      )}
+      {loading && (
+        <div className={styles.loaderDiv}>
+          <ColorRing
+            visible={true}
+            height="43"
+            width="43"
+            ariaLabel="blocks-loading"
+            wrapperStyle={{}}
+            wrapperClass="blocks-wrapper"
+            colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+          />
         </div>
       )}
       {/* {type === "detail" && (

@@ -109,8 +109,9 @@ export default function DoughnutChart({ data, title }: props) {
       </LegendDiv>
       <ChartDiv>
         <Doughnut
+          updateMode="default"
           options={options}
-          style={{ marginTop: 10, width: "100%" }}
+          style={{ marginTop: 10, width: 400 }}
           data={data}
         ></Doughnut>
         <MajorLegendDiv>

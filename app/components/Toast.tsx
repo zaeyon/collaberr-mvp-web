@@ -51,7 +51,7 @@ const Toast = forwardRef((props: props, ref) => {
 
     setTimeout(() => {
       hide();
-    }, 3000);
+    }, 1400);
   };
 
   const hide = () => {

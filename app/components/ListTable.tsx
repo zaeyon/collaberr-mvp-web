@@ -4,15 +4,13 @@ import styled from "@emotion/styled";
 import styles from "./ListTable.module.scss";
 import Link from "next/link";
 import classNames from "classnames/bind";
+import { ColorRing } from "react-loader-spinner";
 
 import Button from "./Button";
 import Tooltip from "./Tooltip";
 import Checkbox from "./Checkbox";
 import EmptyTable from "./EmptyTable";
 
-import icon_youtube from "@/app/assets/icons/icon_youtube.png";
-import icon_instagram from "@/app/assets/icons/icon_instagram.png";
-import icon_tiktok from "@/app/assets/icons/icon_tiktok.png";
 import icon_outlink from "@/app/assets/icons/icon_outlink.png";
 import icon_copy from "@/app/assets/icons/icon_copy.png";
 
@@ -20,8 +18,17 @@ const cx = classNames.bind(styles);
 
 const Container = styled.div`
   width: 100%;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
+`;
+
+const LoadingDiv = styled.div`
+  width: 100%;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 interface props {
@@ -41,6 +48,7 @@ interface props {
   renderTableItem?: any;
   renderSkeletonItem?: any;
   moveToCampaignDetail?: (campaignId: number) => void;
+  copyText?: (text: string) => void;
 }
 
 export default function ListTable({
@@ -60,11 +68,8 @@ export default function ListTable({
   renderTableItem,
   renderSkeletonItem,
   moveToCampaignDetail,
+  copyText,
 }: props) {
-  const copyText = (text: string) => {
-    window.navigator.clipboard.writeText(text);
-  };
-
   return (
     <Container style={{ marginTop: marginTop }}>
       {title && <h3>{title}</h3>}
@@ -136,31 +141,6 @@ export default function ListTable({
                         <span className={styles.dataColumn}>{item[1]}</span>
                       </div>
                     );
-                  } else if (item[0] === "content") {
-                    return (
-                      <div
-                        style={{
-                          justifyContent: "center",
-                          width: `${headerColumns[index].width}%`,
-                        }}
-                        className={styles.dataItem}
-                        key={index}
-                      >
-                        <span className={styles.dataColumn}>
-                          <Link
-                            onClick={(event) => event.stopPropagation()}
-                            href={`/mycampaigns/manage/${item[1]}/recruit`}
-                          >
-                            <Button
-                              label={"보기"}
-                              style={"tertiery"}
-                              size={"xsmall"}
-                              state={"default"}
-                            />
-                          </Link>
-                        </span>
-                      </div>
-                    );
                   } else if (item[0] === "approval_button") {
                     return (
                       <div
@@ -207,35 +187,9 @@ export default function ListTable({
                           {item[1] === "decline_recruit" && "거절됨"}
                           {item[1] === "waiting_for_approval" && "승인대기"}
                           {item[1] === "unregistered" && "미등록"}
-                          {item[1] === "completed_approval" && "참여확정"}
-                          {item[1] === "rejected_approval" && "거절됨"}
+                          {item[1] === "completed_approval" && "승인됨"}
+                          {item[1] === "rejected_approval" && "거부됨"}
                         </span>
-                      </div>
-                    );
-                  } else if (item[0] === "platform") {
-                    return (
-                      <div
-                        style={{
-                          justifyContent: "center",
-                          width: `${headerColumns?.[index]?.width}%`,
-                        }}
-                        className={styles.dataItem}
-                        key={index}
-                      >
-                        <Image
-                          width={20}
-                          height={20}
-                          src={
-                            item[1] === "Youtube"
-                              ? icon_youtube
-                              : item[1] === "Instagram"
-                              ? icon_instagram
-                              : item[1] === "Tiktok"
-                              ? icon_tiktok
-                              : icon_youtube
-                          }
-                          alt={"icon_platform"}
-                        />
                       </div>
                     );
                   } else if (item[0] === "selected") {
@@ -287,36 +241,13 @@ export default function ListTable({
                           {item[1]}
                         </Link>
                         <Image
-                          onClick={() => copyText(item[1])}
+                          onClick={() => (copyText ? copyText(item[1]) : "")}
                           style={{ cursor: "pointer" }}
                           width={20}
                           height={20}
                           alt={"icon_copy"}
                           src={icon_copy}
                         />
-                      </div>
-                    );
-                  } else if (item[0] === "analyze") {
-                    return (
-                      <div
-                        style={{
-                          justifyContent: "center",
-                          width: `${headerColumns[index].width}%`,
-                        }}
-                        className={styles.dataItem}
-                        key={index}
-                      >
-                        <span className={styles.dataColumn}>
-                          <Button
-                            onClick={() =>
-                              openCreatorDetail ? openCreatorDetail() : ""
-                            }
-                            label={"보기"}
-                            style={"tertiery"}
-                            size={"xsmall"}
-                            state={"default"}
-                          />
-                        </span>
                       </div>
                     );
                   } else {
@@ -329,7 +260,9 @@ export default function ListTable({
                         className={styles.dataItem}
                         key={index}
                       >
-                        <span className={cx("dataColumn")}>{item[1]}</span>
+                        <span className={cx("dataColumn")}>
+                          {item[1].toLocaleString()}
+                        </span>
                       </div>
                     );
                   }
@@ -345,6 +278,19 @@ export default function ListTable({
           [0, 1, 2, 3, 4].map((item) => renderSkeletonItem(item))} */}
         {!loading && data.length === 0 && (
           <EmptyTable title={emptyTitle} description={emptyDescrip} />
+        )}
+        {loading && (
+          <LoadingDiv>
+            <ColorRing
+              visible={true}
+              height="43"
+              width="43"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+            />
+          </LoadingDiv>
         )}
       </div>
     </Container>

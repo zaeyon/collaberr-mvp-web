@@ -10,6 +10,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import LegendList from "./LegendList";
+import {ColorRing} from 'react-loader-spinner';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -27,7 +28,18 @@ const Container = styled.div`
 const ChartDiv = styled.div`
   margin-top: 10px;
   height: 100%;
+  position: relative;
 `;
+
+const LoadingDiv = styled.div`
+top: 0px;
+width: 100%;
+height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 const options = {
   maintainAspectRatio: false,
@@ -42,6 +54,17 @@ const options = {
       },
     },
   },
+  animation: {
+    x: {
+      duration: 0,
+      from: 100,
+    },
+    y: {
+      duration: 1000,
+      from: 2000,
+    },
+  },
+
   scales: {
     x: {
       stacked: true,
@@ -54,6 +77,7 @@ const options = {
         color: "#8696AB",
       },
     },
+
     y: {
       display: true,
       border: {
@@ -67,19 +91,20 @@ const options = {
   },
 };
 
-interface props {
-  title: string;
-  data: any;
-  subTitle?: string;
-  marginTop?: number;
-}
+// interface props {
+//   title: string;
+//   data: any;
+//   subTitle?: string;
+//   marginTop?: number;
+// }
 
 export default function BarChart({
+  loading = false,
   title,
   data,
-  subTitle,
+  subTitle = "",
   marginTop = 0,
-}: props) {
+}) {
   return (
     <Container style={{ marginTop: marginTop }}>
       <h4>{title}</h4>
@@ -90,7 +115,22 @@ export default function BarChart({
       />
       <ChartDiv>
         <Bar options={options} data={data} />
+        <LoadingDiv>
+          {loading && (
+           <ColorRing
+              visible={true}
+              height="43"
+              width="43"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+          />
+          )}
+          </LoadingDiv>
       </ChartDiv>
+             
+
     </Container>
   );
 }

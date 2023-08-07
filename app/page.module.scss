@@ -2,7 +2,7 @@
     width: 100%;
     min-height: 900px;
     padding-left: 0px;
-    padding-right: 40px;
+    padding-right: 0px;
 }
 
 .title {  
@@ -17,6 +17,7 @@
 
 .popularCampaigns {
     display: flex;
+    height: 320px;
     flex-direction: column;
     align-items: center;
     gap: 40px;

@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 import Scoreboard from "../../Dashboard/Scoreboard";
 import DoughnutChart from "../../Dashboard/DoughnutChart";
-import BarChart from "../../Dashboard/BarChart";
+import BarChart from "../../Dashboard/BarChart.jsx";
 
 const Container = styled.div``;
 

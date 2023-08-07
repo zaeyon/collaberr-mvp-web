@@ -139,6 +139,9 @@ interface props {
 
 export default function CreatorDetail({ clickModalOutside, channelId }: props) {
   const [loadingInfo, setLoadingInfo] = useState(false);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [loadingVideos, setLoadingVideos] = useState(false);
+
   const [channelInfo, setChannelInfo] = useState<any>({});
   const [channelVideos, setChannelVideos] = useState([]);
   const [uploadAnalysis, setUploadAnalysis] = useState({
@@ -149,6 +152,9 @@ export default function CreatorDetail({ clickModalOutside, channelId }: props) {
 
   useEffect(() => {
     setLoadingInfo(true);
+    setLoadingAnalysis(true);
+    setLoadingVideos(true);
+
     const nowDate: any = new Date();
     const prevDate = new Date(nowDate);
     let uploadForYear: any = {};
@@ -200,6 +206,7 @@ export default function CreatorDetail({ clickModalOutside, channelId }: props) {
       .then((res) => {
         console.log("GET_channelVideos success", res);
         setChannelVideos(res.data.items);
+        setLoadingVideos(false);
         setUploadAnalysis((prev) => {
           return {
             ...prev,
@@ -211,6 +218,7 @@ export default function CreatorDetail({ clickModalOutside, channelId }: props) {
       })
       .catch((err) => {
         console.log("GET_channelVideos err", err);
+        setLoadingVideos(false);
       });
 
     GET_channelVideosPublisedAfter(channelId, prevDate.toISOString())
@@ -249,9 +257,11 @@ export default function CreatorDetail({ clickModalOutside, channelId }: props) {
             monthlyUploadCount: uploadForYear,
           };
         });
+        setLoadingAnalysis(false);
       })
       .catch((err: any) => {
         console.log("GET_channelVideosPublisedAfter err", err);
+        setLoadingAnalysis(false);
       });
   }, []);
 
@@ -389,6 +399,8 @@ export default function CreatorDetail({ clickModalOutside, channelId }: props) {
           </MainInfoItem>
         </MainInfoListDiv>
         <Tab
+          loadingAnalysis={loadingAnalysis}
+          loadingVideos={loadingVideos}
           marginTop={25}
           channelVideos={channelVideos}
           uploadAnalysis={uploadAnalysis}

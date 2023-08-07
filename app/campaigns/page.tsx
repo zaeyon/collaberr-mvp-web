@@ -23,7 +23,7 @@ export default function Campaigns() {
         console.timeEnd("GET_showAllCampaigns");
         console.log("GET_showAllCampaigns sucess", res);
         setLoading(false);
-        setAllCampaigns(res);
+        setAllCampaigns(res.reverse());
       })
       .catch((err) => {
         setLoading(false);

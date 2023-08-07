@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { headers } from "next/headers";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.scss";
@@ -15,6 +15,7 @@ import { toastState } from "../recoil/user";
 export default function MyCampaigns() {
   const [myCampaigns, setMyCampaigns] = useRecoilState(myCampaignsState);
   const [toast, setToast] = useRecoilState(toastState);
+  const [loading, setLoading] = useState(myCampaigns.length > 0 ? false : true);
   const toastRef = useRef<any>();
   const router = useRouter();
 
@@ -28,10 +29,12 @@ export default function MyCampaigns() {
     GET_showMyCampaigns()
       .then((res) => {
         console.log("GET_showMyCampaigns success", res);
-        setMyCampaigns(res.data);
+        setMyCampaigns(res.reverse());
+        setLoading(false);
       })
       .catch((err) => {
         console.log("GET_showMyCampaign err", err);
+        setLoading(false);
       });
   }, []);
 
@@ -39,11 +42,22 @@ export default function MyCampaigns() {
     router.push(`/campaigns/${campaignId}`);
   };
 
+  const moveToCampaignManage = (event: any, campaignId: number) => {
+    console.log("moveToCampaignManage", campaignId);
+    event.stopPropagation();
+
+    router.push(`/mycampaigns/manage/${campaignId}/recruit`);
+  };
+
   return (
     <main>
       <h1>My Campaigns</h1>
       <div className={styles.description}>Manage your campaigns.</div>
-      <MyCampaignList moveToCampaignDetail={moveToCampaignDetail} />
+      <MyCampaignList
+        loading={loading}
+        moveToCampaignDetail={moveToCampaignDetail}
+        moveToCampaignManage={moveToCampaignManage}
+      />
       <Toast ref={toastRef} />
     </main>
   );

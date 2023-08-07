@@ -1,91 +1,71 @@
-.subTitle {
-    color: var(--gray-gray-600, #536878);
-    font-size: 15px;
-    font-family: "Pretendard";
-    font-style: normal;
-    font-weight: 400;
-    line-height: 160%;
-    letter-spacing: -0.225px;
-    margin-top: 8px;
-}
-
-.head {
-    height: 40px;
-    padding-left: 8px;
-    padding-right: 8px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    font-size: 15px;
-    font-family: "Pretendard";
-    font-style: normal;
-    font-weight: 400;
-    letter-spacing: -0.225px;
-    background-color: var(--gray-gray-100, #F1F4F7);
-    border-bottom: 1px solid var(--gray-gray-200, #E6EAEF);
-}
-
-.table {
-    display: flex;
-    flex-direction: column;
-}
-
-.row {
+.container {
     width: 100%;
-}
-
-.headerItem {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.label {
-    color: var(--gray-gray-800, #35424C);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-
-.dataRow {
-    padding-left: 8px;
-    padding-right: 8px;
-    min-width: 0;
+    height: 52px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 52px;
-    color: var(--gray-gray-600, #536878);
-    border-bottom: 1px solid  #E6EAEF;
+
+    color:  #536878;
+    border-bottom: 1px solid #E6EAEF;
     font-family: 'Pretendard';
     font-size: 15px;
     font-style: normal;
     font-weight: 400;
     line-height: 160%;
     letter-spacing: -0.225px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    cursor: pointer;
 }
 
-.dataItem {
-    padding: 0px 0px;
-    display: flex;
-    align-items: center;
-
-    &.link {
-        color: var(--gray-gray-500, #8696AB);
-text-decoration-line: underline;
-    }
-}
-
-.dataColumn {
+.dataSpan {
     min-width: 0;
     padding: 0px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.state {
+    width: 9.37%;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    width: 44.27%;
+    display: flex;
+    align-items: center;
+}
+
+.platform {
+    width: 5.73%;
+    display: flex;
+    justify-content: center;
+    padding-top: 5px;
+}
+
+.category {
+    width: 10.41%;
+    display: flex;
+    justify-content: center;
+}
+
+.period {
+    width: 20.82%;
+    display: flex;
+    justify-content: center;
+}
+
+.manageButton {
+    width: 9.37%;
+    display: flex;
+    justify-content: center;
+}
+
 
 .stateBadge {
     display: flex;

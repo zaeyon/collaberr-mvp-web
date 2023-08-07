@@ -25,7 +25,7 @@ export const myCampaignsTableListState = selector({
     get: ({get})=> {
         const myCampaigns = get(myCampaignsState);
 
-        return myCampaigns.map((item) => {
+        return myCampaigns?.map((item) => {
             return {
                 state: 
                 item.is_completed ? 'progress_complete' : 
@@ -49,7 +49,7 @@ export const campaignStatusTableState = selector({
     get: ({get}) => {
         const myCampaigns = get(myCampaignsState);
 
-        return myCampaigns.map((item: any, index) => {
+        return myCampaigns?.map((item: any, index) => {
             return {
                 state: 
                 item.is_completed ? 'progress_complete' : 

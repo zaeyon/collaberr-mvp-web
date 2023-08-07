@@ -7,8 +7,9 @@ import animationInitial from "@/app/assets/animations/loader_skeletonCard.png";
 import { Player } from '@lottiefiles/react-lottie-player';
 
 const Container = styled.div`
+left: -10px;
   width: 330px;
-  height: 400px;
+  height: 250px;
   background-size: 330px;
   background-repeat: no-repeat;
     position: relative;
@@ -33,7 +34,7 @@ export default function SkeletonCard({}) {
       renderer={'svg'}
       src={animationData}
       progressiveLoad={true}
-      style={{width: '330px', position: 'absolute', top: 0,left: 0}}
+      viewBoxOnly={false}
       onEvent={event => {
         if (event === 'load') {
           setBgImage('none');

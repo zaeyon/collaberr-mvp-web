@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 
 import DoughnutChart from "@/app/components/Dashboard/DoughnutChart";
-import BarChart from "@/app/components/Dashboard/BarChart";
+import BarChart from "@/app/components/Dashboard/BarChart.jsx";
 
 const Container = styled.div`
   padding: 40px 0px 200px 0px;

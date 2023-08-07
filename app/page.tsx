@@ -24,6 +24,9 @@ export default function Home() {
   const [loading, setLoading] = useState(
     allCampaigns.length > 0 ? false : true
   );
+  const [loadingCreators, setLoadingCreators] = useState(
+    allCreators.length > 0 ? false : true
+  );
   const [curCategory, setCurCategory] = useState({
     value: "all",
     kr: "전체",
@@ -71,9 +74,11 @@ export default function Home() {
         console.log("GET_showAllCreators success", res);
         setAllCreators(res);
         setCreatorRankingData(res);
+        setLoadingCreators(false);
       })
       .catch((err) => {
         console.log("GET_showAllCreators fail err", err);
+        setLoadingCreators(false);
       });
   }, []);
 
@@ -124,6 +129,7 @@ export default function Home() {
       </p>
       <div className={styles.creatorRanking}>
         <CreatorRanking
+          loading={loadingCreators}
           openCreatorDetail={openCreatorDetail}
           selectCategory={selectCategory}
           curCategory={curCategory}

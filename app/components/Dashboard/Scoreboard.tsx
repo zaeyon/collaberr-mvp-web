@@ -3,12 +3,18 @@ import styles from "./Scoreboard.module.scss";
 import Tooltip from "../Tooltip";
 
 interface props {
+  loading?: boolean;
   data: any[];
   marginTop?: number;
   gap?: number;
 }
 
-export default function Scoreboard({ data, marginTop = 0, gap = 20 }: props) {
+export default function Scoreboard({
+  data,
+  marginTop = 0,
+  gap = 20,
+  loading,
+}: props) {
   return (
     <div
       style={{ marginTop: marginTop, gap: gap }}
@@ -27,7 +33,9 @@ export default function Scoreboard({ data, marginTop = 0, gap = 20 }: props) {
                 />
               )}
             </div>
-            <div className={styles.value}>{item.value ? item.value : " "}</div>
+            <div className={styles.value}>
+              {!loading && item.value ? item.value : "-"}
+            </div>
             {item.change && (
               <div
                 style={{

@@ -58,8 +58,6 @@ export default function Creators() {
       {isVisCreatorDetail && (
         <CreatorDetail
           channelId={channelId}
-          curTab={curTab}
-          changeTab={changeTab}
           clickModalOutside={clickModalOutside}
         />
       )}
