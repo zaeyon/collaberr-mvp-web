@@ -8,6 +8,7 @@ import { GET_showMyCampaigns } from "../api/campaign";
 import Scoreboard from "../components/Dashboard/Scoreboard";
 import ListTable from "../components/ListTable";
 import GraphTab from "../components/Dashboard/GraphTab";
+import { getCookie } from "../lib/cookie";
 
 const Container = styled.div`
   padding: 40px 0px;
@@ -46,7 +47,10 @@ export default function Dashboard() {
     GET_showMyCampaigns()
       .then((res) => {
         console.log("GET_showMyCampaigns success", res);
-        setMyCampaigns(res);
+        const accountId = getCookie("account_id");
+        setMyCampaigns(
+          res.reverse().filter((item: any) => item.owner === accountId)
+        );
         totalInvestmentCost.current = res.reduce((sum: number, item: any) => {
           return (sum += item.reward * item.approved_creators.length);
         }, 0);
@@ -193,7 +197,8 @@ const ACTION_GRAPH_DATA = [
   {
     label: "전체 참여",
     value: "53,230",
-    description: "이것은 툴팁입니다.\n 툴팁 안의 텍스트를 입력해주세요",
+    description: "전체 참여 수 = 공유 수 + 댓글 수 + 좋아요 수",
+    tooltipWidth: 280,
     change: "increase",
     changeDescription: "한달 전 보다 10% 증가했어요",
     data: {

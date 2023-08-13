@@ -43,9 +43,9 @@ export const GET_showAllCampaigns = async () => {
 }
 
 export const GET_showMyCampaigns = async () => {
-  const res = await fetch(`${baseUrl}/api/campaigns/all/`);
+  const res = await fetch(`${baseUrl}/api/campaigns/`);
   if(!res.ok) {
-    throw Error("GET_showMyCampaigns err");
+    throw Error("GET_showMyCampaigns 22err");
   }
   return res.json();
 }

@@ -11,6 +11,7 @@ import { GET_showMyCampaigns } from "../api/campaign";
 import { myCampaignsState } from "../recoil/campaign";
 import Toast from "../components/Toast";
 import { toastState } from "../recoil/user";
+import { getCookie } from "../lib/cookie";
 
 export default function MyCampaigns() {
   const [myCampaigns, setMyCampaigns] = useRecoilState(myCampaignsState);
@@ -29,11 +30,15 @@ export default function MyCampaigns() {
     GET_showMyCampaigns()
       .then((res) => {
         console.log("GET_showMyCampaigns success", res);
-        setMyCampaigns(res.reverse());
+        const accountId = getCookie("account_id");
+
+        setMyCampaigns(
+          res.reverse().filter((item: any) => item.owner === accountId)
+        );
         setLoading(false);
       })
       .catch((err) => {
-        console.log("GET_showMyCampaign err", err);
+        console.log("GET_showMyCampaign err11", err);
         setLoading(false);
       });
   }, []);

@@ -122,7 +122,7 @@ export default function GraphTab({
                   <Tooltip
                     iconType={"info"}
                     description={item.description}
-                    tooltipWidth={214}
+                    tooltipWidth={item.tooltipWidth ? item.tooltipWidth : 214}
                   />
                 )}
               </TabLabelDiv>
