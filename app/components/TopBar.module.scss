@@ -12,6 +12,11 @@
     border-bottom: 1px solid #CFD6DC;
     background-color: white;
     z-index: 3;
+
+    @media (max-width: 767px) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 .container div {

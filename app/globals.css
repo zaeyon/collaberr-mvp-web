@@ -19,7 +19,12 @@ body {
 main {
   padding: 48px 40px 48px 48px;
   overflow-x: hidden;
+
+  @media (max-width: 767px){
+  padding: 28px 20px 28px 20px;
+  }
 }
+
 
 section {
   width: 100%;

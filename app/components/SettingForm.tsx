@@ -19,6 +19,9 @@ const Container = styled.div`
   margin-top: 48px;
   padding: 0px 40px;
   background-color: white;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 const Title = styled.div`
   font-family: "Pretendard";

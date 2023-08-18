@@ -8,6 +8,11 @@
     flex-direction: row;
     overflow-x: scroll;
     gap: 16px;
+
+    @media (max-width: 767px) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
 }
 
 .container::-webkit-scrollbar {

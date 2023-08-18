@@ -44,7 +44,11 @@ export default function JoinCampaign({
         <div className={styles.subItem}>
           <div className={styles.subLabel}>모집현황</div>
           <div className={styles.subValue}>
-            {!loading ? campaignItem.approved_creators.length + "명" : ""}
+            {!loading
+              ? campaignItem.approved_creators
+                ? campaignItem.approved_creators.length + "명"
+                : "0명"
+              : ""}
             <span className={styles.addInfo}>{""}</span>
           </div>
         </div>

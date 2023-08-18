@@ -1,4 +1,5 @@
 import {atom} from 'recoil';
+import { detectMobile } from '../lib/detectMobile';
 
 export const userState = atom({
     key: 'userState',
@@ -29,5 +30,5 @@ export const toastState = atom({
 
 export const isVisSidebarState = atom({
     key: 'isVisSidebarState',
-    default: true
+    default: detectMobile() ? false : true
 })

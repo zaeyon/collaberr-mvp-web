@@ -13,6 +13,7 @@ import CreatorRanking from "./components/CreatorRanking";
 import CreatorDetail from "./components/Creators/CreatorDetail";
 import { GET_showAllCampaigns } from "./api/campaign";
 import { GET_showAllCreators } from "./api/creator";
+import { detectMobile } from "./lib/detectMobile";
 
 import icon_chevron_right from "@/app/assets/icons/icon_chevron-right.png";
 
@@ -93,7 +94,7 @@ export default function Home() {
           onClick={() => router.push("/campaigns")}
           className={styles.showAll}
         >
-          전체보기
+          {detectMobile() ? "" : "전체보기"}
           <Image
             width={20}
             height={20}
