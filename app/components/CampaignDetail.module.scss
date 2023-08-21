@@ -5,6 +5,10 @@
     flex-direction: column;
     word-wrap: break-word;
 
+    @media (max-width: 767px) {
+        width: 100%;
+    }
+
 }
 
 .head {

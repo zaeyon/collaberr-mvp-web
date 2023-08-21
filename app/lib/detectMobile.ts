@@ -9,6 +9,6 @@ export function detectMobile() {
         /Windows Phone/i
     ]  
     return toMatch.some((toMatchItem) => {
-        return navigator.userAgent.match(toMatchItem)
+        return typeof window !== 'undefined' ? window.navigator.userAgent.match(toMatchItem) : ""
     })
 }

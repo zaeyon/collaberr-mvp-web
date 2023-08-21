@@ -94,7 +94,6 @@ export default function Home() {
           onClick={() => router.push("/campaigns")}
           className={styles.showAll}
         >
-          {detectMobile() ? "" : "전체보기"}
           <Image
             width={20}
             height={20}

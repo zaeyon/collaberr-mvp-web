@@ -26,11 +26,15 @@
 }
 
 .rankingList {
-    width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, 530px);
     justify-content: space-between;
     margin-top: 24px;
+
+    @media (max-width: 767px) {
+        width: 100%;
+        
+    }
 }
 
 .loadingDiv {

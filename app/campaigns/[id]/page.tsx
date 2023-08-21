@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
+import { Device } from "@/app/components/Device";
 
 import { toastState } from "@/app/recoil/user";
 import { GET_showCampaign } from "@/app/api/campaign";
@@ -114,38 +115,78 @@ export default function Page({ params }: { params: { id: number } }) {
   };
 
   return (
-    <main className={styles.main}>
-      <div style={{ width: "62%" }}>
-        <CampaignDetail
-          loading={loading}
-          isBookmark={isBookmark}
-          clickBookmark={clickBookmark}
-          type={"detail"}
-          category={campaignItem.category}
-          brandName={campaignItem.brand_name}
-          title={campaignItem.title}
-          thumbnailImageSrc={campaignItem.thumbnail}
-          platform={campaignItem.platform}
-          shownStartDate={campaignItem.start_date}
-          shownEndDate={campaignItem.end_date}
-          description={campaignItem.description}
-          missionType={campaignItem.mission_type}
-          bid={campaignItem.reward}
-          files={campaignItem.additional_files}
-        />
-      </div>
-      <JoinCampaign
-        loading={loading}
-        campaignItem={campaignItem}
-        clickJoinCampaign={clickJoinCampaign}
-      />
-      <Toast ref={toastRef} />
-      {isReviewCreatorInfoModal && (
-        <ReviewCreatorInfoModal
-          closeModal={closeModal}
-          submitJoinCampaign={submitJoinCampaign}
-        />
-      )}
-    </main>
+    <>
+      <Device desktop>
+        <main className={styles.main}>
+          <div style={{ width: "62%" }}>
+            <CampaignDetail
+              loading={loading}
+              isBookmark={isBookmark}
+              clickBookmark={clickBookmark}
+              type={"detail"}
+              category={campaignItem.category}
+              brandName={campaignItem.brand_name}
+              title={campaignItem.title}
+              thumbnailImageSrc={campaignItem.thumbnail}
+              platform={campaignItem.platform}
+              shownStartDate={campaignItem.start_date}
+              shownEndDate={campaignItem.end_date}
+              description={campaignItem.description}
+              missionType={campaignItem.mission_type}
+              bid={campaignItem.reward}
+              files={campaignItem.additional_files}
+            />
+          </div>
+          <JoinCampaign
+            loading={loading}
+            campaignItem={campaignItem}
+            clickJoinCampaign={clickJoinCampaign}
+          />
+          <Toast ref={toastRef} />
+          {isReviewCreatorInfoModal && (
+            <ReviewCreatorInfoModal
+              closeModal={closeModal}
+              submitJoinCampaign={submitJoinCampaign}
+            />
+          )}
+        </main>
+      </Device>
+      <Device mobile>
+        <main className={styles.main}>
+          <div style={{ width: "100%" }}>
+            <CampaignDetail
+              loading={loading}
+              isBookmark={isBookmark}
+              clickBookmark={clickBookmark}
+              type={"detail"}
+              category={campaignItem.category}
+              brandName={campaignItem.brand_name}
+              title={campaignItem.title}
+              thumbnailImageSrc={campaignItem.thumbnail}
+              platform={campaignItem.platform}
+              shownStartDate={campaignItem.start_date}
+              shownEndDate={campaignItem.end_date}
+              description={campaignItem.description}
+              missionType={campaignItem.mission_type}
+              bid={campaignItem.reward}
+              files={campaignItem.additional_files}
+            />
+            <JoinCampaign
+              loading={loading}
+              campaignItem={campaignItem}
+              clickJoinCampaign={clickJoinCampaign}
+            />
+          </div>
+
+          <Toast ref={toastRef} />
+          {isReviewCreatorInfoModal && (
+            <ReviewCreatorInfoModal
+              closeModal={closeModal}
+              submitJoinCampaign={submitJoinCampaign}
+            />
+          )}
+        </main>
+      </Device>
+    </>
   );
 }

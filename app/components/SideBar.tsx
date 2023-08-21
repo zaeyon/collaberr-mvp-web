@@ -1,13 +1,15 @@
 import styles from "./SideBar.module.scss";
 import Link from "next/link";
-import { userState } from "../recoil/user";
+import { userState, isVisSidebarState } from "../recoil/user";
 import { useRecoilValue } from "recoil";
 import { usePathname } from "next/navigation";
+import { isMobile, isBrowser } from "react-device-detect";
 
 import CategoryLinkItem from "./CategoryLinkItem";
 
 export default function SideBar() {
   const user = useRecoilValue(userState);
+  const isVisSidebar = useRecoilValue(isVisSidebarState);
   const pathname = usePathname();
 
   console.log("pathname", pathname);
@@ -22,6 +24,7 @@ export default function SideBar() {
           pathname === "/setting"
             ? "none"
             : "flex",
+        visibility: isVisSidebar ? "visible" : "hidden",
       }}
       className={styles.container}
     >

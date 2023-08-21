@@ -21,6 +21,7 @@ export default function CreatorRanking({
   creatorRankingData,
   openCreatorDetail,
 }: props) {
+  console.log("creatorRankingData", creatorRankingData);
   return (
     <div>
       <div className={styles.categoryList}>

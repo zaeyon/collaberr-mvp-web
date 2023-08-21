@@ -1,5 +1,6 @@
 import {atom} from 'recoil';
 import { detectMobile } from '../lib/detectMobile';
+import {isMobile} from 'react-device-detect';
 
 export const userState = atom({
     key: 'userState',
@@ -30,5 +31,5 @@ export const toastState = atom({
 
 export const isVisSidebarState = atom({
     key: 'isVisSidebarState',
-    default: detectMobile() ? false : true
+    default: isMobile ? false : true
 })

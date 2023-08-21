@@ -14,13 +14,20 @@ body {
   padding-top: 64px;
   background-color: white;
   display: flex;
+
+  @media (max-width: 767px) {
+    padding-left: 0px;
+  }
 }
 
+
 main {
+  width: 100%;
   padding: 48px 40px 48px 48px;
   overflow-x: hidden;
 
   @media (max-width: 767px){
+  width: 100vw;
   padding: 28px 20px 28px 20px;
   }
 }
