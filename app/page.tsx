@@ -11,9 +11,11 @@ import CampaignCarousel from "./components/CampaignCarousel";
 import Button from "./components/Button";
 import CreatorRanking from "./components/CreatorRanking";
 import CreatorDetail from "./components/Creators/CreatorDetail";
+import MCreatorDetail from "./components/Creators/MCreatorDetail";
 import { GET_showAllCampaigns } from "./api/campaign";
 import { GET_showAllCreators } from "./api/creator";
 import { detectMobile } from "./lib/detectMobile";
+import { Device } from "./components/Device";
 
 import icon_chevron_right from "@/app/assets/icons/icon_chevron-right.png";
 
@@ -56,6 +58,10 @@ export default function Home() {
     setIsVisCreatorDetail(false);
   };
 
+  const clickExitModal = () => {
+    setIsVisCreatorDetail(false);
+  };
+
   useEffect(() => {
     console.time("GET_showAllCampaigns");
     GET_showAllCampaigns()
@@ -90,17 +96,35 @@ export default function Home() {
         <p className={styles.description}>
           지금 크리에이터들에게 가장 인기있는 캠페인
         </p>
-        <div
-          onClick={() => router.push("/campaigns")}
-          className={styles.showAll}
-        >
-          <Image
-            width={20}
-            height={20}
-            src={icon_chevron_right}
-            alt={"icon_chevron_right"}
-          />
-        </div>
+        <Device desktop>
+          <div
+            onClick={() => router.push("/campaigns")}
+            className={styles.showAll}
+          >
+            {" "}
+            전체보기
+            <Image
+              width={20}
+              height={20}
+              src={icon_chevron_right}
+              alt={"icon_chevron_right"}
+            />
+          </div>
+        </Device>{" "}
+        <Device mobile>
+          <div
+            onClick={() => router.push("/campaigns")}
+            className={styles.showAll}
+          >
+            {" "}
+            <Image
+              width={20}
+              height={20}
+              src={icon_chevron_right}
+              alt={"icon_chevron_right"}
+            />
+          </div>
+        </Device>
       </div>
       <div className={styles.popularCampaigns}>
         <CampaignCarousel loading={loading} campaignsData={allCampaigns} />
@@ -137,10 +161,20 @@ export default function Home() {
         />
       </div>{" "}
       {isVisCreatorDetail && (
-        <CreatorDetail
-          channelId={channelId}
-          clickModalOutside={clickModalOutside}
-        />
+        <>
+          <Device desktop>
+            <CreatorDetail
+              channelId={channelId}
+              clickModalOutside={clickModalOutside}
+            />
+          </Device>
+          <Device mobile>
+            <MCreatorDetail
+              channelId={channelId}
+              clickExitModal={clickExitModal}
+            />
+          </Device>
+        </>
       )}
     </main>
   );

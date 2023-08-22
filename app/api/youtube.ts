@@ -1,6 +1,6 @@
 import { baseUrl } from ".";
 import axios from "axios";
-const YOUTUBE_API_KEY = "AIzaSyChy6BOPH5Bqki7uccqCtdxUBwDJYfHxC4";
+const YOUTUBE_API_KEY = "AIzaSyCdE32XjchMShwkZSm8kd1dwiOQuBotCPg";
 const YOUTUBE_BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
 export const GET_youtubeAuth = () => {

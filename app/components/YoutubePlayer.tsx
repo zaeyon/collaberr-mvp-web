@@ -4,14 +4,15 @@ import Image from "next/image";
 import { motion, MotionConfig } from "framer-motion";
 
 interface props {
+  device?: string;
   video: any;
 }
 
-export default function YoutubePlayer({ video }: props) {
+export default function YoutubePlayer({ video, device }: props) {
   return (
     <iframe
       style={{ borderRadius: 8 }}
-      width="307"
+      width={"307"}
       height="172"
       src={`https://www.youtube.com/embed/${video.id.videoId}`}
       title={video.snippet.title}

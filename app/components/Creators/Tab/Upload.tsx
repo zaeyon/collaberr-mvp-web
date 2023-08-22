@@ -5,6 +5,7 @@ import { ColorRing } from "react-loader-spinner";
 import Scoreboard from "../../Dashboard/Scoreboard";
 import BarChart from "../../Dashboard/BarChart.jsx";
 import YoutubePlayer from "../../YoutubePlayer";
+import { Device } from "../../Device";
 
 const Container = styled.div``;
 
@@ -77,37 +78,73 @@ export default function Upload({
 
   return (
     <Container>
-      <Scoreboard loading={loadingAnalysis} data={SCOREBOARD_DATA} gap={30} />
+      <Device desktop>
+        <Scoreboard loading={loadingAnalysis} data={SCOREBOARD_DATA} gap={30} />
+      </Device>
       <BarChart
         loading={loadingAnalysis}
         marginTop={30}
         title={"월간 업로드 현황 (최근 1년)"}
         data={WEEKLY_UPLOAD_DATA}
       />
-      <ChannelVideosDiv>
-        <h3>업로드한 콘텐츠</h3>
-        {!loadingVideos && (
-          <GridDiv>
-            {channelVideos.map((videoItem: any, index: number) => {
-              return <YoutubePlayer key={index} video={videoItem} />;
-            })}
-          </GridDiv>
-        )}
-        {loadingVideos && (
-          <LoadingDiv>
-            <ColorRing
-              visible={true}
-              height="43"
-              width="43"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-              colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
-            />
-          </LoadingDiv>
-        )}
-        <div id="player"></div>
-      </ChannelVideosDiv>
+      <Device desktop>
+        <ChannelVideosDiv>
+          <h3>업로드한 콘텐츠</h3>
+          {!loadingVideos && (
+            <GridDiv>
+              {channelVideos.map((videoItem: any, index: number) => {
+                return <YoutubePlayer key={index} video={videoItem} />;
+              })}
+            </GridDiv>
+          )}
+          {loadingVideos && (
+            <LoadingDiv>
+              <ColorRing
+                visible={true}
+                height="43"
+                width="43"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+              />
+            </LoadingDiv>
+          )}
+          <div id="player"></div>
+        </ChannelVideosDiv>
+      </Device>
+      <Device mobile>
+        <ChannelVideosDiv>
+          <h3>업로드한 콘텐츠</h3>
+          {!loadingVideos && (
+            <GridDiv style={{ justifyContent: "center" }}>
+              {channelVideos.map((videoItem: any, index: number) => {
+                return (
+                  <YoutubePlayer
+                    device={"mobile"}
+                    key={index}
+                    video={videoItem}
+                  />
+                );
+              })}
+            </GridDiv>
+          )}
+          {loadingVideos && (
+            <LoadingDiv>
+              <ColorRing
+                visible={true}
+                height="43"
+                width="43"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#F25476", "#F25476", "#F25476", "#F25476", "#F25476"]}
+              />
+            </LoadingDiv>
+          )}
+          <div id="player"></div>
+        </ChannelVideosDiv>
+      </Device>
     </Container>
   );
 }
